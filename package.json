@@ -1,0 +1,28 @@
+{
+  "name": "gleemusic",
+  "version": "1.0.0",
+  "description": "music streming service",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ags1773/gleeMusic.git"
+  },
+  "keywords": [
+    "mongodb",
+    "express",
+    "music",
+    "streaming"
+  ],
+  "author": "Amogh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ags1773/gleeMusic/issues"
+  },
+  "homepage": "https://github.com/ags1773/gleeMusic#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
