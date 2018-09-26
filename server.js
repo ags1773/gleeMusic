@@ -2,12 +2,13 @@ const express = require('express')
 const path = require('path')
 const multer = require('multer')
 const fs = require('fs')
+const { promisify } = require('util')
+const { findFileExt } = require(path.join(__dirname, 'findFileExt'))
 const acceptedFormats = ['mp3', 'flac', 'wav', 'm4a', 'aac']
-const { findFileExt } = require(path.join(__dirname, '/findFileExt'))
-const upload = multer({dest: path.join(__dirname, '/music')})
+const upload = multer({dest: path.join(__dirname, 'music')})
 const app = express()
 
-app.use(express.static(path.join(__dirname, '/music')))
+app.use(express.static(path.join(__dirname, 'music')))
 
 app.post('/music', upload.single('song'), fileDetails, (req, res) => {
   let temp = req.fileDetailsObj
@@ -19,27 +20,35 @@ app.post('/music', upload.single('song'), fileDetails, (req, res) => {
 
 function fileDetails (req, res, next) {
   if (req.file) {
-    const fileExt = findFileExt(path.join(__dirname, '/music/', req.file.filename))
+    const fileExt = findFileExt(path.join(__dirname, 'music', req.file.filename))
 
     if (fileExt && acceptedFormats.includes(fileExt.ext)) {
-      let {ext, mime} = fileExt
-      req.fileDetailsObj = {
-        filename: req.file.filename,
-        name: req.file.encoding,
-        mimetype: req.file.mimetype,
-        originalname: req.file.originalname,
-        path: req.file.path,
-        size: req.file.size,
-        encoding: req.file.encoding,
-        destination: req.file.destination,
-        ext: ext,
-        mime: mime
-      }
-      next()
+      const fsRename = promisify(fs.rename)
+      const {ext, mime} = fileExt
+      const newPath = path.join(__dirname, 'music', `${req.file.filename}.${ext}`)
+      fsRename(req.file.path, newPath)
+        .then(() => {
+          req.fileDetailsObj = {
+            filename: req.file.filename + ext,
+            originalname: req.file.originalname,
+            path: newPath,
+            size: req.file.size,
+            encoding: req.file.encoding,
+            mimeType: mime
+          }
+          next()
+        })
+        .catch(e => { throw e })
     } else {
-      console.log('Delete file >>', path.join(__dirname, '/music/', req.file.filename))
-      fs.unlink(path.join(__dirname, '/music/', req.file.filename), err => { if (err) throw err })
-      res.status(400).json(`Bad request. Supported formats: ${acceptedFormats}`).send()
+      const fsUnlink = promisify(fs.unlink)
+      fsUnlink(path.join(__dirname, 'music', req.file.filename))
+        .then(() => {
+          res
+            .status(400)
+            .json(`File either not of supported format, or unable to verify file format.. Accepted formats: ${acceptedFormats}`)
+            .send()
+        })
+        .catch(e => { throw e })
     }
   } else res.status(400).json(`Bad request. File not recieved`).send()
 }
