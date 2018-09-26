@@ -8,4 +8,4 @@ mongoose.connect('mongodb://127.0.0.1:27017/gleeMusic', { useNewUrlParser: true 
 app.use(express.static(config.musicStorageDir))
 app.use(navRoutes)
 
-module.exports = app
+app.listen(config.port, () => console.log(`gleeMusic server running on port ${config.port}`))

@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
+const Schema = mongoose.Schema
 
 const dataSchema = new Schema({
-  _id: ObjectId,
   fileName: String,
   originalName: String,
   path: String,
@@ -12,4 +10,5 @@ const dataSchema = new Schema({
   mimeType: String
 })
 
-module.exports = mongoose.model('Metadata', dataSchema)
+const Model = mongoose.model('Metadata', dataSchema)
+module.exports.model = Model

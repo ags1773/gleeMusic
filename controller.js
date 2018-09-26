@@ -2,25 +2,27 @@ const path = require('path')
 const { promisify } = require('util')
 const fs = require('fs')
 const config = require('./config')
+const Metadata = require('./music/metadata/model')
+const MetadataModel = Metadata.model
 
 const acceptedFormats = config.acceptedFormats
 const musicStorageDir = config.musicStorageDir
 
 module.exports.postReqCallback = function (req, res) {
-  let temp = req.fileDetailsObj
-
-  // create metadata about music file
-  // write metadata to DB
-  for (let prop in temp) {
-    console.log(`${prop}: ${temp[prop]}`)
-  }
-  res.json(temp).status(200).send()
+  const metadata = new MetadataModel(req.fileDetailsObj)
+  MetadataModel.create(metadata)
+    .then(() => {
+      res.json(`Successfully added ${req.fileDetailsObj.originalName}`).status(200).send()
+    })
+    .catch(e => {
+      res.json('Fail').status(500).send()
+      throw e
+    })
 }
 
 // middleware
 module.exports.fileDetails = function (req, res, next) {
   if (req.file) {
-    // const fileExt = findFileExt(path.join(musicStorageDir, req.file.filename))
     const fileExt = findFileExt(path.join(musicStorageDir, req.file.filename))
 
     if (fileExt && acceptedFormats.includes(fileExt.ext)) {
@@ -30,8 +32,8 @@ module.exports.fileDetails = function (req, res, next) {
       fsRename(req.file.path, newPath)
         .then(() => {
           req.fileDetailsObj = {
-            filename: req.file.filename + ext,
-            originalname: req.file.originalname,
+            fileName: req.file.filename + ext,
+            originalName: req.file.originalname,
             path: newPath,
             size: req.file.size,
             encoding: req.file.encoding,
