@@ -15,7 +15,9 @@ module.exports.postReqCallback = function (req, res) {
       res.json(`Successfully added ${req.fileDetailsObj.originalName}`).status(200).send()
     })
     .catch(e => {
-      res.json('Fail').status(500).send()
+      res.json(`Failed to create metadata for ${req.fileDetailsObj.originalName}`)
+        .status(500)
+        .send()
       throw e
     })
 }
@@ -32,7 +34,7 @@ module.exports.fileDetails = function (req, res, next) {
       fsRename(req.file.path, newPath)
         .then(() => {
           req.fileDetailsObj = {
-            fileName: req.file.filename + ext,
+            fileName: req.file.filename,
             originalName: req.file.originalname,
             path: newPath,
             size: req.file.size,
