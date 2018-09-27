@@ -15,7 +15,8 @@
 #home footer {
   font-size: 2rem;
   opacity: 0.75;
-  background-color: rgb(40, 0, 34)
+  background-color: rgb(40, 0, 34);
+  padding: 0;
 }
 #home .playlist {
   margin: 1em 0;
@@ -26,4 +27,9 @@
 }
 #home .playlist .test {
   background-color: blueviolet;
+  color: white;
 }
+#home audio {
+  width: 100%;
+}
+

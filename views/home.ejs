@@ -16,23 +16,28 @@
     <span class='navbar-brand mx-auto py-0'>Glee Music</span>
   </nav>
   <main class='pb-5 container'>
-    <button class='btn btn-primary'><i class="far fa-play-circle fa-5x"></i></button>
+    <!-- <button class='btn btn-primary'><i class="far fa-play-circle fa-5x"></i></button> -->
     <div class='playlist'>
       <% locals.metadata.forEach(songData => { %>
-        <div class='playlist-item py-2' data-fileName="<%= songData.fileName %>">
+        <div class='playlist-item py-2' 
+          data-fileName='<%= songData.fileName %>'
+          data-serverIp='<%= locals.localIp %>'
+          >
           <%= songData.originalName %>
         </div>
       <% }) %>
     </div>
   </main>
   <footer class='navbar fixed-bottom py-1'>
-    <audio
-      controls
-      src="http://localhost:3000/9e682e9217346463db598ed82422fa2d.mp3"
-      preload="metadata"
-      >
-      Your browser doesn't support the <code>audio</code>> element
-    </audio>
+    <audio id="player"></audio>
+    <!-- <audio
+    id="player"
+    controls
+    src="http://localhost:3000/9e682e9217346463db598ed82422fa2d.mp3"
+    preload="metadata"
+    >
+    Your browser doesn't support the <code>audio</code>> element
+  </audio> -->
   </footer>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -1,3 +1,4 @@
+const ip = require('ip')
 const path = require('path')
 const { promisify } = require('util')
 const fs = require('fs')
@@ -10,7 +11,7 @@ const musicStorageDir = config.musicStorageDir
 
 module.exports.getHomeCb = function (req, res) {
   Metadata.fetchAll()
-    .then(found => res.render('home', {metadata: found}))
+    .then(found => res.render('home', {metadata: found, localIp: `${ip.address()}:${config.port}`}))
     .catch(e => { throw e })
 }
 module.exports.postMusicCb = function (req, res) {
@@ -40,7 +41,7 @@ module.exports.fileDetails = function (req, res, next) {
       fsRename(req.file.path, newPath)
         .then(() => {
           req.fileDetailsObj = {
-            fileName: req.file.filename,
+            fileName: req.file.filename + '.' + ext,
             originalName: req.file.originalname,
             path: newPath,
             size: req.file.size,
