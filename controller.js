@@ -8,13 +8,19 @@ const MetadataModel = Metadata.model
 const acceptedFormats = config.acceptedFormats
 const musicStorageDir = config.musicStorageDir
 
-module.exports.postReqCallback = function (req, res) {
+module.exports.getHomeCb = function (req, res) {
+  Metadata.fetchAll()
+    .then(found => res.render('home', {metadata: found}))
+    .catch(e => { throw e })
+}
+module.exports.postMusicCb = function (req, res) {
   const metadata = new MetadataModel(req.fileDetailsObj)
   MetadataModel.create(metadata)
     .then(() => {
       res.json(`Successfully added ${req.fileDetailsObj.originalName}`).status(200).send()
     })
     .catch(e => {
+      // delete file from FS
       res.json(`Failed to create metadata for ${req.fileDetailsObj.originalName}`)
         .status(500)
         .send()

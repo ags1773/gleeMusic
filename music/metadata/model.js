@@ -12,3 +12,5 @@ const dataSchema = new Schema({
 
 const Model = mongoose.model('Metadata', dataSchema)
 module.exports.model = Model
+
+module.exports.fetchAll = () => Model.find({})
