@@ -20,12 +20,12 @@ module.exports.postMusicCb = function (req, res) {
     .then(() => {
       res.status(200).redirect('/')
     })
-    .catch(e => {
+    .catch(() => {
       // delete file from FS
+      fs.unlink(req.fileDetailsObj.path, (e) => { if (e) console.log(e) })
       res.json(`Failed to create metadata for ${req.fileDetailsObj.originalName}`)
         .status(500)
         .send()
-      throw e
     })
 }
 
