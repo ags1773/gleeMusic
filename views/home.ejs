@@ -26,7 +26,16 @@
         </div>
       <% }) %>
     </div>
-    <div id='addBtn'><a href="/music" class="fas fa-plus fa-3x"></a></div>
+    <div class='formBtns'>
+      <form 
+        method="post" 
+        enctype="multipart/form-data" 
+        action="/music">
+          <label class="btn px-3 m-0" for="file"><i class="fas fa-plus fa-3x"></i></label>
+          <input type="file" id="file" name="song" accept="audio/*" class='d-none'>
+          <button type="submit" class="btn px-3 ml-2"><i class="fas fa-upload fa-3x"></i></button>
+      </form>
+    </div>
   </main>
   <footer class='navbar fixed-bottom py-1'>
     <audio id="player"></audio>

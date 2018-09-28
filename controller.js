@@ -14,9 +14,6 @@ module.exports.getHomeCb = function (req, res) {
     .then(found => res.render('home', {metadata: found, localIp: `${ip.address()}:${config.port}`}))
     .catch(e => { throw e })
 }
-module.exports.getFormCb = function (req, res) {
-  res.render('form')
-}
 module.exports.postMusicCb = function (req, res) {
   const metadata = new MetadataModel(req.fileDetailsObj)
   MetadataModel.create(metadata)
