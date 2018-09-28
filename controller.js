@@ -14,11 +14,14 @@ module.exports.getHomeCb = function (req, res) {
     .then(found => res.render('home', {metadata: found, localIp: `${ip.address()}:${config.port}`}))
     .catch(e => { throw e })
 }
+module.exports.getFormCb = function (req, res) {
+  res.render('form')
+}
 module.exports.postMusicCb = function (req, res) {
   const metadata = new MetadataModel(req.fileDetailsObj)
   MetadataModel.create(metadata)
     .then(() => {
-      res.json(`Successfully added ${req.fileDetailsObj.originalName}`).status(200).send()
+      res.status(200).redirect('/')
     })
     .catch(e => {
       // delete file from FS
@@ -65,9 +68,10 @@ module.exports.fileDetails = function (req, res, next) {
   } else res.status(400).json(`Bad request. File not recieved`).send()
 }
 
-function findFileExt (file) {
+// functions
+function findFileExt (file) { // determines file extension from first 4100 bytes of data
   const readChunk = require('read-chunk')
   const fileType = require('file-type')
   const buffer = readChunk.sync(file, 0, 4100)
-  return fileType(buffer) // calculates filetype from first 4100 bytes of buffer data
+  return fileType(buffer)
 }

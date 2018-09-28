@@ -1,14 +1,14 @@
-#home .navbar-brand {
+.navbar-brand {
   font-family: 'Sacramento', cursive;
   font-size: 3rem;
 }
-#home nav.navbar {
+nav.navbar {
   background-color: rgb(52,51,58);
 }
-#home {
+body {
   background-color: rgb(237,227,222)
 }
-#home .navbar .navbar-brand {
+.navbar .navbar-brand {
   color: white;
   text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #ff00de , 0 0 70px #ff00de , 0 0 80px #ff00de , 0 0 100px #ff00de ;
 }
@@ -36,4 +36,21 @@
 #home audio {
   width: 100%;
 }
-
+#home main {
+  position: relative;
+}
+#home #addBtn {
+  display: inline-block;
+  background-color: rgba(52,51,58, 0.65);
+  color: white;
+  padding: 10px;
+  border-radius: 1em;
+  position: fixed;
+  bottom: 12vh;
+  right: 3vw;
+  cursor: pointer;
+}
+#home #addBtn a {
+  text-decoration: none;
+  color: inherit;
+}
