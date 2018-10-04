@@ -16,11 +16,13 @@
     <a href='/' class='navbar-brand mx-auto py-0'>Glee Music</a>
   </nav>
   <main class='pb-5 container'>
+
+    <input type="text" class="form-control mt-2" placeholder="search">
+
     <div class='playlist'>
       <% locals.metadata.forEach(songData => { %>
         <div class='playlist-item py-2' 
           data-fileName='<%= songData.fileName %>'
-          data-serverIp='<%= locals.localIp %>'
           >
           <%= songData.originalName %>
         </div>
@@ -40,6 +42,9 @@
   <footer class='navbar fixed-bottom py-1'>
     <audio id="player"></audio>
   </footer>
+  <script>
+    const metadata = <%- JSON.stringify(locals.metadata) %>
+  </script>
   <script src='script.js'></script>
 </body>
 </html>

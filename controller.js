@@ -1,4 +1,3 @@
-const ip = require('ip')
 const path = require('path')
 const { promisify } = require('util')
 const fs = require('fs')
@@ -14,12 +13,12 @@ module.exports.getHomeCb = function (req, res) {
     .then(data => {
       let dataArr = data.hits.hits
       dataArr = dataArr.map(x => x._source)
-      res.render('home', {metadata: dataArr, localIp: `${ip.address()}:${config.port}`})
+      res.render('home', { metadata: dataArr })
     })
     .catch(e => { throw e })
 }
 module.exports.postMusicCb = function (req, res) {
-  fetch(config.elasticUrl + '/metadata/_doc', {
+  fetch(config.elasticUrl + '/metadata/my_type', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
