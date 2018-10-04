@@ -1,5 +1,21 @@
-Elasticsearch queries: 
+### GleeMusic
+Uses
+* File System for storing music files
+* elasticSearch as DB for storing metadata
+* elasticSearch for search suggestions
+* Express server
+* EJS templating engine
+* Bootstrap (because I'm lazy)
 
+How to run the app:
+* elasticSearch needs to be installed and running on port 9200 with '/metadata' index created (refer below queries for set-up)
+* npm install
+* npm start
+
+---
+## Queries for setting up '/metadata' index in elasticSearch
+#### setup analyzer
+```sh
 PUT /metadata
 {
     "settings": {
@@ -25,8 +41,9 @@ PUT /metadata
         }
     }
 }
-
----------------------------------------------
+```
+#### setup mapping
+```sh
 PUT /metadata/_mapping/my_type
 {
     "my_type": {
@@ -85,10 +102,13 @@ PUT /metadata/_mapping/my_type
         }
     }
 }
--------------------------------------------
-POST to http://127.0.0.1:9200/metadata/my_type
--------------------------------------------
-search query
+```
+#### Send POST request for indexing new data on 
+```sh
+http://127.0.0.1:9200/metadata/my_type
+```
+#### Sample search query
+```sh
 GET /metadata/my_type/_search
 {
   "query": {
@@ -97,4 +117,4 @@ GET /metadata/my_type/_search
     }
   }
 }
--------------------------------------------
+```
