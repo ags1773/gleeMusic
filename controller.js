@@ -2,26 +2,35 @@ const ip = require('ip')
 const path = require('path')
 const { promisify } = require('util')
 const fs = require('fs')
+const fetch = require('node-fetch')
 const config = require('./config')
-const Metadata = require('./music/metadata/model')
-const MetadataModel = Metadata.model
 
 const acceptedFormats = config.acceptedFormats
 const musicStorageDir = config.musicStorageDir
 
 module.exports.getHomeCb = function (req, res) {
-  Metadata.fetchAll()
-    .then(found => res.render('home', {metadata: found, localIp: `${ip.address()}:${config.port}`}))
+  fetch(config.elasticUrl + '/metadata/_search')
+    .then(res => res.json())
+    .then(data => {
+      let dataArr = data.hits.hits
+      dataArr = dataArr.map(x => x._source)
+      res.render('home', {metadata: dataArr, localIp: `${ip.address()}:${config.port}`})
+    })
     .catch(e => { throw e })
 }
 module.exports.postMusicCb = function (req, res) {
-  const metadata = new MetadataModel(req.fileDetailsObj)
-  MetadataModel.create(metadata)
-    .then(() => {
-      res.status(200).redirect('/')
-    })
+  fetch(config.elasticUrl + '/metadata/_doc', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(req.fileDetailsObj)
+  })
+    .then(() => new Promise(resolve => setTimeout(() => resolve(), 2000))) // wait for 2 seconds before redirect as POST data takes time to index into elastic DB (It isn't actually supposed to be used as DB)
+    .then(() => res.status(200).redirect('/'))
     .catch(() => {
-      // delete file from FS
+    // delete file from FS
       fs.unlink(req.fileDetailsObj.path, (e) => { if (e) console.log(e) })
       res.json(`Failed to create metadata for ${req.fileDetailsObj.originalName}`)
         .status(500)
