@@ -5,7 +5,7 @@ Uses
 * elasticSearch for search suggestions
 * Express server
 * EJS templating engine
-* Bootstrap (because I'm lazy)
+* Bootstrap
 
 How to run the app:
 * elasticSearch needs to be installed and running on port 9200 with '/metadata' index created (refer below queries for set-up)
@@ -109,11 +109,15 @@ http://127.0.0.1:9200/metadata/my_type
 ```
 #### Sample search query
 ```sh
+GET http://127.0.0.1:9200/metadata/my_type/_search?q=originalName:bea
+```
+-- OR --
+```sh
 GET /metadata/my_type/_search
 {
   "query": {
     "match": {
-      "name": "Brown " 
+      "originalName": "bea" 
     }
   }
 }

@@ -4,6 +4,7 @@ const searchBar = document.querySelector('input[type="text"]')
 const url = 'http://127.0.0.1:3000' // server url
 const searchURL = 'http://127.0.0.1:9200/metadata/my_type/_search' // elasticSearch url
 let previousItem = null
+let flag = false
 
 document.addEventListener('DOMContentLoaded', () => {
   searchBar.value = ''
@@ -29,10 +30,15 @@ searchBar.addEventListener('keyup', e => {
     fetch(searchURL + '?q=originalName:' + e.target.value)
       .then(res => res.json())
       .then(data => {
+        flag = true
         clearPlaylist()
         populatePlaylist(data.hits.hits)
       })
       .catch(e => { throw e })
+  }
+  if (!e.target.value && flag) { // when user clears searchbox, reload page
+    flag = false
+    window.location.reload()
   }
 })
 
